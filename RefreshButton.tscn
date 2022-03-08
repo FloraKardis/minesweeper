@@ -1,0 +1,205 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://Art/level_mask.png" type="Texture" id=1]
+[ext_resource path="res://Art/refresh_idle_right.png" type="Texture" id=2]
+[ext_resource path="res://RefreshButton.gd" type="Script" id=3]
+[ext_resource path="res://Art/level1_full.png" type="Texture" id=4]
+[ext_resource path="res://Art/level3_empty.png" type="Texture" id=5]
+[ext_resource path="res://Art/level2_empty.png" type="Texture" id=6]
+[ext_resource path="res://Art/level3_full.png" type="Texture" id=7]
+[ext_resource path="res://Art/level2_full.png" type="Texture" id=8]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Open"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Circle:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 180.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Circle/Left:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 0 ), Vector2( -65, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Circle/Right:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 0 ), Vector2( 50, 0 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Masks/Mask1:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( -34, 0 ), Vector2( -34, 0 ), Vector2( -34, -100 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Masks/Mask2:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.5, 0.7 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 0 ), Vector2( 0, -100 ) ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("Masks/Mask3:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0, 0.7, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 34, 0 ), Vector2( 34, 0 ), Vector2( 34, -100 ) ]
+}
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 71, 41 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 273, 42 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 273, 346 )
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 93, 42 )
+
+[node name="RefreshButton" type="Control"]
+rect_pivot_offset = Vector2( 40, 40 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Open = SubResource( 1 )
+
+[node name="Circle" type="Node2D" parent="."]
+position = Vector2( 40, 40 )
+z_index = 1
+
+[node name="Left" type="Sprite" parent="Circle"]
+rotation = 3.14159
+texture = ExtResource( 2 )
+
+[node name="Right" type="Sprite" parent="Circle"]
+texture = ExtResource( 2 )
+
+[node name="Levels" type="Node2D" parent="."]
+position = Vector2( 40, 40 )
+
+[node name="Level1" type="TextureButton" parent="Levels"]
+margin_left = -48.0
+margin_top = -30.0
+margin_right = -14.0
+margin_bottom = 30.0
+texture_normal = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Level2" type="TextureButton" parent="Levels"]
+margin_left = -14.0
+margin_top = -30.0
+margin_right = 20.0
+margin_bottom = 30.0
+texture_normal = ExtResource( 6 )
+texture_hover = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Level3" type="TextureButton" parent="Levels"]
+margin_left = 20.0
+margin_top = -30.0
+margin_right = 48.0
+margin_bottom = 30.0
+texture_normal = ExtResource( 5 )
+texture_hover = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Masks" type="Node2D" parent="."]
+position = Vector2( 40, 40 )
+
+[node name="Mask1" type="Sprite" parent="Masks"]
+position = Vector2( -34, 0 )
+texture = ExtResource( 1 )
+
+[node name="Mask2" type="Sprite" parent="Masks"]
+texture = ExtResource( 1 )
+
+[node name="Mask3" type="Sprite" parent="Masks"]
+position = Vector2( 34, 0 )
+texture = ExtResource( 1 )
+
+[node name="AreaEnter" type="Area2D" parent="."]
+position = Vector2( 40, 40 )
+z_index = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaEnter"]
+shape = SubResource( 2 )
+
+[node name="AreaExit" type="Area2D" parent="."]
+position = Vector2( 40, 40 )
+z_index = 4
+
+[node name="ShapeUp" type="CollisionShape2D" parent="AreaExit"]
+position = Vector2( 0, -84 )
+shape = SubResource( 3 )
+
+[node name="ShapeDown" type="CollisionShape2D" parent="AreaExit"]
+position = Vector2( 0, 388 )
+shape = SubResource( 4 )
+
+[node name="ShapeLeft" type="CollisionShape2D" parent="AreaExit"]
+position = Vector2( -180, 0 )
+shape = SubResource( 5 )
+
+[node name="ShapeRight" type="CollisionShape2D" parent="AreaExit"]
+position = Vector2( 195, 0 )
+shape = SubResource( 5 )
+[connection signal="mouse_entered" from="Levels/Level1" to="." method="_on_Level_mouse_entered" binds= [ 1 ]]
+[connection signal="mouse_exited" from="Levels/Level1" to="." method="_on_Level_mouse_exited" binds= [ 1 ]]
+[connection signal="pressed" from="Levels/Level1" to="." method="_on_Level_pressed" binds= [ 1 ]]
+[connection signal="mouse_entered" from="Levels/Level2" to="." method="_on_Level_mouse_entered" binds= [ 2 ]]
+[connection signal="mouse_exited" from="Levels/Level2" to="." method="_on_Level_mouse_exited" binds= [ 2 ]]
+[connection signal="pressed" from="Levels/Level2" to="." method="_on_Level_pressed" binds= [ 2 ]]
+[connection signal="mouse_entered" from="Levels/Level3" to="." method="_on_Level_mouse_entered" binds= [ 3 ]]
+[connection signal="mouse_exited" from="Levels/Level3" to="." method="_on_Level_mouse_exited" binds= [ 3 ]]
+[connection signal="pressed" from="Levels/Level3" to="." method="_on_Level_pressed" binds= [ 3 ]]
+[connection signal="mouse_entered" from="AreaEnter" to="." method="_on_AreaEnter_mouse_entered"]
+[connection signal="mouse_entered" from="AreaExit" to="." method="_on_AreaExit_mouse_entered"]
