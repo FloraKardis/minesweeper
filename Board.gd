@@ -2,13 +2,13 @@ extends Node2D
 
 const width:  int = 15
 const height: int = 15
-const easy:   int = 30
-const medium: int = 40
-const hard:   int = 50
-const difficulty: Array = [-1, easy, medium, hard] # there's no level 0
+const mine_count_easy:   int = 30
+const mine_count_medium: int = 40
+const mine_count_hard:   int = 50
+const difficulty: Array = [null, mine_count_easy, mine_count_medium, mine_count_hard] # there's no level 0
 
 var current_level: int = 2
-var mines_total: int = medium
+var mines_total: int = mine_count_medium
 
 var square_scene: Resource = load("res://Square.tscn")
 
@@ -55,16 +55,6 @@ func create_blank_board():
 	# update neighbours
 	for square in all_squares():
 		square.neighbours = get_neighbours(square.x, square.y)
-
-func save_board(safe_boards: File):
-#	safe_boards.store_line("[")
-	for x in width:
-		var line: String = "["
-		for y in (height - 1):
-			line += ("1" if squares[x][y].mined else "0") + ", "
-		line += ("1" if squares[x][height - 1].mined else "0") + "],"
-		safe_boards.store_line("\t" + line)
-	safe_boards.store_line("]")
 
 func get_neighbours(x, y):
 	var neighbours: Array = []
@@ -115,10 +105,7 @@ func secure_neighbourhood(square: Square):
 		neighbour.safe = true
 
 func _input(event):
-	if event is InputEventKey:
-		if Input.is_action_pressed("b") and Input.is_action_pressed("o") and Input.is_action_pressed("p"):
-			get_parent().switch_assets()
-	elif event is InputEventMouseButton:
+	if event is InputEventMouseButton:
 		if not Globals.board_locked:
 			if event.pressed:
 				if event.button_index == BUTTON_LEFT:
@@ -182,9 +169,3 @@ func game_won():
 	for square in all_squares():
 		square.react("win")
 	$AnimationPlayer.play("Shine")
-
-# Easter egg
-
-func switch_assets():
-	for square in all_squares():
-		square.switch_assets()

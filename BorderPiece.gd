@@ -15,4 +15,3 @@ func set_texture_from_type(type: String):
 		texture = load("res://Art/border_horizontal.png")
 	if type == "vertical":
 		texture = load("res://Art/border_vertical.png")
-	

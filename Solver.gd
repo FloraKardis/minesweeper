@@ -6,8 +6,6 @@ class PossiblyMinedSquaresList:
 	func _init(list, mine_count):
 		self.list = list
 		self.mine_count = mine_count
-	func _to_string():
-		return "(" + str(list) + ", " + str(mine_count) + ")"
 
 class SolverSquare:
 	var x: int
@@ -26,8 +24,6 @@ class SolverSquare:
 		mine_count = square.mine_count
 	func remaining_mines():
 		return mine_count - flagged_count
-	func _to_string():
-		return "(" + str(x) + ", " + str(y) + ")"
 
 var lists: Array = []
 var mines_total: int 
@@ -38,19 +34,14 @@ var interesting_squares: Array = []
 var prepared = false
 
 func solve(mines_total: int, squares: Array, clicked_square: Square):
-	var time_start: int = OS.get_ticks_msec()
-#	if not prepared:
 	prepare(mines_total,squares, clicked_square)
 	var making_progress: bool = true
 	while making_progress:
 		making_progress = try_progressing()
-#	prepared = true
 	var time_stop: int = OS.get_ticks_msec()
-#	print(time_stop - time_start)
-#	show_results(get_parent().squares)
-	return solved()
+	return is_solved()
 
-func solved():
+func is_solved():
 	return mines_total == mines_flagged
 
 func prepare(mines_total: int, squares: Array, clicked_square: Square):
@@ -82,25 +73,19 @@ func get_neighbours(x, y):
 				neighbours.append(squares[i][j])
 	return neighbours
 
-func show_results(board: Array):
-	for x in len(squares):
-		for y in len(squares[0]):
-			var square = squares[x][y]
-			if not square.covered:
-				simple_uncover(board[x][y])
-			if square.flagged:
-				if not board[x][y].flagged:
-					board[x][y].toggle_flag()
-	get_parent().mines_flagged = self.mines_flagged
-	get_parent().update_counter()
-
 func simple_uncover(square: Square):
 	if square.covered and not square.flagged:
 		square.covered = false
 		square.load_textures("square_uncovered", 
 							 "number_" + str(square.mine_count) if not square.mined else "mine")
 
-func try_progressing():
+func try_progressing() -> bool:
+	var making_progress: bool = update_squares()
+	if not making_progress:
+		making_progress = update_mine_count()
+	return making_progress
+
+func update_squares() -> bool:
 	for square in interesting_squares.duplicate():
 		# check if interesting:
 		if square.neighbours_covered_unflagged.empty():
@@ -137,19 +122,16 @@ func try_progressing():
 						return true
 		# nothing can be done with the square
 		interesting_squares.erase(square)
+	return false
 
-	# counting mines
+func update_mine_count() -> bool:
+	
 	var covered_squares: Array = covered_unflagged_squares()
 	var bordering_squares: Array = find_bordering(covered_squares)
 	var unreachable_squares: Array = find_unreachable(bordering_squares, covered_squares)
 	var mines_remaining: int = mines_total - mines_flagged
 	var safe_squares: Array = bordering_squares.duplicate()
 	
-#	print("covered:     ", covered_squares)
-#	print("interesting: ", find_interesting(covered_squares))
-#	print("bordering:   ", bordering_squares)
-#	print("unreachable: ", unreachable_squares)
-		
 	if mines_remaining > 0 and mines_remaining < 5 and len(covered_squares) < 10:
 		var interesting_squares: Array = find_interesting(covered_squares)
 		var correct_combinations: Array = flags_combinations(interesting_squares, bordering_squares, bordering_squares, unreachable_squares, mines_remaining)
@@ -193,7 +175,6 @@ func find_interesting(covered_squares: Array):
 				interesting.append(neighbour)
 	return interesting
 
-	
 func find_bordering(covered_squares: Array):
 	var bordering: Array = []
 	for covered in covered_squares:
@@ -297,29 +278,6 @@ func covered_unflagged_squares():
 			if square.covered and not square.flagged:
 				covered.append(square)
 	return covered
-
-func is_correct(combination: Array, covered_squares: Array):
-	# flag all
-	for index in len(covered_squares):
-		if combination[index] == 1:
-			covered_squares[index].flagged = true
-	# check correctness
-	var correct: bool = true
-	for index in len(covered_squares):
-		for neighbour in covered_squares[index].neighbours_all:
-			var flags_number: int = 0
-			for neighbours_neighbour in neighbour.neighbours_all:
-				if neighbours_neighbour.flagged:
-					flags_number += 1
-			if flags_number != neighbour.mine_count:
-				correct = false
-				break
-		if not correct:
-			break
-	# unflag all
-	for square in covered_squares:
-		square.flagged = false
-	return correct
 
 func uncover(square: SolverSquare):
 	square.covered = false

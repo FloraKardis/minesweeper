@@ -91,30 +91,8 @@ func _on_Area2D_mouse_exited():
 			Globals.active_square = null
 
 func load_textures(box: String, content):
-	$Box.texture = load("res://Art/" + box + easter_egg_suffix + ".png")
+	$Box.texture = load("res://Art/" + box + ".png")
 	if content == null:
 		$Content.texture = null
 	else:
-		$Content.texture = load("res://Art/" + content + easter_egg_suffix + ".png")
-
-func _to_string():
-	return "(" + str(x) + ", " + str(y) + ")"
-
-# Easter egg
-
-var using_easter_egg_assets: bool = false
-var easter_egg_suffix: String = ""
-
-func switch_assets():
-	using_easter_egg_assets = not using_easter_egg_assets
-	if using_easter_egg_assets:
-		easter_egg_suffix = "_easter_egg"
-	else:
-		easter_egg_suffix = ""
-	if covered:
-		load_textures("square_covered", "flag" if flagged else null)
-	else:
-		load_textures("square_uncovered", "number_" + str(mine_count) if not mined else "mine")
-		if flagged and not mined:
-			load_textures("square_uncovered", "no_mine")
-
+		$Content.texture = load("res://Art/" + content + ".png")
